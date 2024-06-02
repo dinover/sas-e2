@@ -2,23 +2,95 @@
   "name": "sas-e2",
   "version": "0.1.0",
   "private": true,
+  "main": "main.js",
   "scripts": {
-    "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "electron": "electron .",
+    "start": "electron-forge start",
+    "serve": "vue-cli-service serve",
+    "lint": "vue-cli-service lint",
+    "dev": "nodemon ./src/server.js",
+    "electron:serve": "set ELECTRON_START_URL=http://localhost:8080 && electron .",
+    "package-win": "electron-packager . sas-e --platform=win32 --arch=x64 --out=release-builds --overwrite",
+    "package-mac": "electron-packager . sas-e --platform=darwin --arch=x64 --out=release-builds --overwrite",
+    "package": "electron-forge package",
+    "make": "electron-forge make"
   },
   "dependencies": {
+    "@mdi/font": "^7.4.47",
+    "alert": "^6.0.1",
     "core-js": "^3.8.3",
-    "vue": "^3.2.13"
+    "cors": "^2.8.5",
+    "electron-squirrel-startup": "^1.0.1",
+    "express": "^4.19.2",
+    "multer": "^1.4.5-lts.1",
+    "sqlite3": "^5.1.7",
+    "uuid": "^9.0.1",
+    "vue": "^3.2.13",
+    "vue-router": "^4.3.2",
+    "vue3-toastify": "^0.2.1",
+    "vuetify": "^3.6.3"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
     "@babel/eslint-parser": "^7.12.16",
+    "@electron-forge/cli": "^7.4.0",
+    "@electron-forge/maker-deb": "^7.4.0",
+    "@electron-forge/maker-rpm": "^7.4.0",
+    "@electron-forge/maker-squirrel": "^7.4.0",
+    "@electron-forge/maker-zip": "^7.4.0",
+    "@electron-forge/plugin-auto-unpack-natives": "^7.4.0",
+    "@electron-forge/plugin-fuses": "^7.4.0",
+    "@electron/fuses": "^1.8.0",
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-plugin-eslint": "~5.0.0",
     "@vue/cli-service": "~5.0.0",
+    "electron": "^30.0.8",
+    "electron-packager": "^17.1.2",
     "eslint": "^7.32.0",
-    "eslint-plugin-vue": "^8.0.3"
+    "eslint-plugin-vue": "^8.0.3",
+    "nodemon": "^3.1.0"
+  },
+  "config": {
+    "forge": {
+      "packagerConfig": {
+        "asar": true,
+        "asarUnpack": [
+          "**/node_modules/cors/**",
+          "**/node_modules/express/**",
+          "**/node_modules/sqlite3/**"
+        ],
+        "extraResource": [
+          "src/server.js",
+          "dist",
+          "src/db/helper.db",
+          "src/db/Files",
+          "src/v1",
+          "src/controllers",
+          "src/services"
+        ]
+      },
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {}
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "darwin"
+          ]
+        },
+        {
+          "name": "@electron-forge/maker-deb",
+          "config": {}
+        },
+        {
+          "name": "@electron-forge/maker-rpm",
+          "config": {}
+        }
+      ]
+    }
   },
   "eslintConfig": {
     "root": true,
